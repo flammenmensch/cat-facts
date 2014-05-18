@@ -1,0 +1,16 @@
+extend ../includes/layout
+
+block main-content
+	.container
+		.page-header
+			h2= title
+				|&nbsp;
+				small= subtitle
+		.row
+			.panel.panel-default(ng-controller="CatController as catCtrl")
+				.panel-body
+					.image(background-image src="catCtrl.data.image")
+						blockquote
+							|{{catCtrl.data.fact}}
+		footer
+			p!= copyright
