@@ -14,6 +14,21 @@ module.exports = function (app) {
 
 	//var INSTAGRAM_CLIENT_ID = '494d53a84fd5492c844804d711c7b733';
 
+	router.route('/api/rest/fact')
+		.get(function (req, res, next) {
+			async.parallel([ catService.getFact, catService.getImage ], function (err, results) {
+				var response = {
+					success: true,
+					data: {
+						fact: results[0],
+						image: results[1]
+					}
+				};
+
+				return res.json(200, response);
+			});
+		});
+
 	router.route('/api/realtime/callback')
 		.get(function (req, res, next) {
 			res.send(req.param('hub.challenge') || '');
@@ -22,17 +37,14 @@ module.exports = function (app) {
 		.post(function (req, res, next) {
 			async.parallel([ catService.getFact, catService.getImage ], function (err, results) {
 				var message = {
-					success: true,
-					data: {
-						fact: results[0],
-						image: results[1]
-					}
+					fact: results[0],
+					image: results[1]
 				};
 
 				wsService.broadcastMessage(JSON.stringify(message));
-
-				return res.json(200, { success: true });
 			});
+
+			return res.json(200, { success: true });
 		});
 
 	return router;

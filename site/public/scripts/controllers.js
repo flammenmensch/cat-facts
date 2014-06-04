@@ -3,7 +3,7 @@
  */
 (function (angular) {
 	angular.module('cat-facts.controllers', [ 'cat-facts.services' ])
-		.controller('CatController', [ '$timeout', 'CatService', function ($timeout, catService) {
+		.controller('CatController', [ '$timeout', '$interval', 'CatRestService', 'CatRealtimeService', function ($timeout, $interval, catService, catRealtimeService) {
 			var self = this;
 
 			this.data = {
@@ -11,7 +11,17 @@
 				fact: 'No fact loaded'
 			};
 
-			catService.setCallback(function (message) {
+			this.getFact = function () {
+				catService.getFact().success(function (response) {
+					self.data = response.data;
+
+					$timeout(self.getFact, 20000);
+				}).error(function (error) {
+					console.error(error);
+				});
+			};
+
+			/*catRealtimeService.setCallback(function (message) {
 				$timeout(function () {
 					try {
 						var response = JSON.parse(message.data);
@@ -20,6 +30,8 @@
 						console.error(err);
 					}
 				});
-			});
+			});*/
+
+			this.getFact();
 		} ]);
 } (angular));

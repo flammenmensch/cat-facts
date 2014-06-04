@@ -4,11 +4,17 @@
 (function (angular) {
 	angular.module('cat-facts.services', [ ])
 
-		.provider('CatService', function () {
+		.service('CatRestService', [ '$http', function ($http) {
+			this.getFact = function () {
+				return $http.get('/api/rest/fact');
+			};
+		} ])
+
+		.provider('CatRealtimeService', function () {
 			var _websocketUrl = 'ws://localhost:8001/socket';
 
-			var CatService = function () {
-				var ws = new WebSocket(_websocketUrl);
+			var CatService = function (url) {
+				var ws = new WebSocket(url);
 
 				ws.onopen = function () {
 					console.log('Socket connection was opened');
@@ -21,11 +27,12 @@
 
 			this.wsUrl = function (value) {
 				_websocketUrl = value;
+
 				return this;
 			};
 
 			this.$get = [ function () {
-				return new CatService();
+				return new CatService(_websocketUrl);
 			} ];
 		});
 } (angular));

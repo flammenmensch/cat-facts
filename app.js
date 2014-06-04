@@ -7,7 +7,7 @@ var jade = require('jade');
 var app = express();
 
 app.set('title', 'CatFacts');
-app.set('subtitle', 'Realtime cat facts and pictures.');
+app.set('subtitle', 'Random cat facts and pictures.');
 app.set('copyright', new Date().getFullYear() + ', Flammenmensch. Cats provided by <a href="https://instagram.com" target="_blank">Instagr.am</a> and <a href="http://www.iconka.com/ru" target="_blank">Iconka</a>.');
 
 app.set('views', __dirname + '/site/views');
